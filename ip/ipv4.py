@@ -12,7 +12,6 @@ def validate_ipv4(ipv4: str) -> str:
         return ipv4
     except Exception as e:
         print(f"{M_ERROR} Invalid IPv4 address: {ipv4}")
-        sys.exit(1)
 
 def input_ipv4(message: str, default: str=None) -> str:
     """
@@ -30,7 +29,6 @@ def input_ipv4(message: str, default: str=None) -> str:
         
     except KeyboardInterrupt:
         print(f"{M_ERROR} Detected CTRL+C!")
-        sys.exit(0)
 
 def get_routing_prefix(ipv4: str, subnetmask: str) -> str:
     """

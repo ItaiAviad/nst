@@ -33,12 +33,18 @@ MAC_OUT_FILE = "oui.txt"
 
 MAX_HOSTNAME_LENGTH = 45
 
+NETFILTER_QUEUE_NUM = 0
+
 # Globals
 from argv import *
 argv = arg_parse_init()
 
 mac_vendors = {}
 
+dns_hosts = {}
+queue = None
+
 from style import *
 from ip import *
 from arp import *
+from dns import *

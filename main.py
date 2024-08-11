@@ -18,6 +18,9 @@ def main():
     
     if (argv.arp_spoof):
         arp_spoofing(net_info)
+    
+    if (argv.dns_spoof):
+        dns_spoofing(net_info)
 
     if (not argv.quiet):
         print(f'{M_INFO} Done!')

@@ -20,9 +20,9 @@ def get_mac(ip: str, net_info: dict=None) -> str:
     if (net_info != None and 'self_ipv4' in net_info and ip == net_info['self_ipv4']):
         return ARP().hwsrc
     
-    RESTART_LIMIT = 5
+    RESTART_LIMIT = 10
     for i in range(RESTART_LIMIT):
-        ans, _ = srp(Ether(dst='ff:ff:ff:ff:ff:ff')/ARP(pdst=ip), timeout=2, verbose=0)
+        ans, _ = srp(Ether(dst='ff:ff:ff:ff:ff:ff')/ARP(pdst=ip), timeout=1, verbose=0)
         if ans:
             return ans[0][1].hwsrc
     return None
@@ -145,6 +145,8 @@ def arp_spoofing(net_info: dict):
 
         print(f'{M_IMPORTANT} ARP Cache Poisoning:')
         target_ipv4 = input_ipv4('Target: ')
+        if (not target_ipv4):
+            raise Exception('Invalid target IPv4 address')
         host_ipv4 = input_ipv4('Host: ', net_info['gateway'])
         target_mac = get_mac(target_ipv4)
         host_mac = get_mac(host_ipv4)
@@ -159,11 +161,11 @@ def arp_spoofing(net_info: dict):
             # sleep for one second
             time.sleep(0.5)
     except KeyboardInterrupt:
-        print(f"{M_ERROR} Detected CTRL+C! restoring the network, please wait...")
+        print(f"{M_ERROR} Detected CTRL+C! Restoring the network, please wait...")
         arp_spoof_restore(host_ipv4, target_ipv4)
         arp_spoof_restore(target_ipv4, host_ipv4)
     except Exception as e:
         print(f"{M_ERROR} Error: {e}")
-
+        sys.exit(1)
 
 
