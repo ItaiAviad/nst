@@ -34,6 +34,7 @@ MAC_OUT_FILE = "oui.txt"
 MAX_HOSTNAME_LENGTH = 45
 
 NETFILTER_QUEUE_NUM = 0
+DNS_SPOOF_ALL_DOMAINS = '*'
 
 # Globals
 from argv import *

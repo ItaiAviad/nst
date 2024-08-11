@@ -147,7 +147,7 @@ def arp_spoofing(net_info: dict):
         target_ipv4 = input_ipv4('Target: ')
         if (not target_ipv4):
             raise Exception('Invalid target IPv4 address')
-        host_ipv4 = input_ipv4('Host: ', net_info['gateway'])
+        host_ipv4 = input_ipv4(f'Host (default: {net_info["gateway"]}): ', net_info['gateway'])
         target_mac = get_mac(target_ipv4)
         host_mac = get_mac(host_ipv4)
 

