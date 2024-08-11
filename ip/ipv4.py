@@ -22,10 +22,10 @@ def input_ipv4(message: str, default: str=None) -> str:
     """
 
     try:
-        print(f"{M_INFO} {message}", end='')
+        print(f"{M_IMPORTANT} {message}", end='')
         ipv4 = input().strip()
         if default and ipv4 == '': # Allow blank input (default taken)
-                return default
+            return default
         return validate_ipv4(ipv4)
         
     except KeyboardInterrupt:

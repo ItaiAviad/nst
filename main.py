@@ -3,8 +3,6 @@
 from config import *
 
 def main():
-    global argv
-
     print(argv)
 
     net_info = get_network_info()
@@ -22,7 +20,7 @@ def main():
         arp_spoofing(net_info)
 
     if (not argv.quiet):
-        print(f'{M_IMPORTANT} Done!')
+        print(f'{M_INFO} Done!')
 
 if __name__ == '__main__':
     main()

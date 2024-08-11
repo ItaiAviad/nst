@@ -13,12 +13,15 @@ def print_json_data(*args, data, keys=False, **kwargs):
         return builtins.print(json.dumps(data, indent=2))
     
     for key, value in data.items():
+        pend = '\t'
         if isinstance(value, dict):
             # Print key followed by a space for nested dictionaries
-            builtins.print(f"{key + ': ' if keys else ''}{", ".join(f'{k + ': ' if keys else ''} {v}' for k, v in value.items())}", end='\t')
+            builtins.print(f"{key + ': ' if keys else ''}{", ".join(f'{k + ': ' if keys else ''} {v}' for k, v in value.items())}", end=pend)
         else:
+            if key == 'hostname':
+                pend = ' ' * (MAX_HOSTNAME_LENGTH - len(value))
             # Print key-value pair in a single line
-            builtins.print(f"{key + ': ' if keys else ''}{value}", end='\t')
+            builtins.print(f"{key + ': ' if keys else ''}{value}", end=pend)
     builtins.print()  # End the line after printing all key-value pairs
 
 def print(*args, **kwargs):
@@ -37,7 +40,7 @@ def print(*args, **kwargs):
         return color_print(*args, color=Colors.ENDC, **kwargs)
 
     prefix = largs[0]
-    if (argv.quiet and prefix in M_TYPES):
+    if (argv.quiet and prefix in M_TYPES and prefix != M_IMPORTANT):
         return
     
     if (prefix == M_IMPORTANT):
